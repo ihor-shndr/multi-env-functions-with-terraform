@@ -1,0 +1,10 @@
+on:
+  push:
+    branches:
+      - 'dev'
+  workflow_dispatch:
+  
+jobs:
+  ci-cd-pipeline:
+   uses: ./.github/workflows/shared.yml
+   secrets: inherit
