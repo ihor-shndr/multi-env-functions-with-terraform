@@ -1,0 +1,89 @@
+
+name: Build and deploy
+
+on:
+  push:
+    branches:
+      - '*'
+  workflow_dispatch:
+env:
+  NODE_VERSION: '18.x'
+  ENV: prod
+  
+jobs:
+  terraform:
+   name: "Terraform"
+   runs-on: ubuntu-latest
+   defaults:
+     run:
+       shell: bash
+       working-directory: ./terraform
+ 
+   steps:
+     - name: Checkout the repository to the runner
+       uses: actions/checkout@v4
+
+     - name: Azure Login
+       uses: azure/login@v1.4.6
+       with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+     - name: Create backend.conf file
+       run: |
+         chmod +x ../scripts/create-backend-conf.sh
+         ../scripts/create-backend-conf.sh $APP_NAME $ENV $STORAGE_ACCOUNT
+
+     - name: Setup Terraform with specified version on the runner
+       uses: hashicorp/setup-terraform@v2
+       with:
+         terraform_version: 1.3.0
+     
+     - name: Terraform init
+       id: init
+       run: terraform init -backend-config=backend.conf
+ 
+     - name: Terraform Apply
+       run: terraform apply -var env=$ENV -auto-approve
+
+  build-and-deploy:
+    name: 'Build Nest functions and deploy'
+    runs-on: ubuntu-latest
+    needs: terraform
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./functions/hello-world
+    steps:
+      - name: Azure Login
+        uses: azure/login@v1.4.6
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: 'Checkout GitHub Action'
+        uses: actions/checkout@v4
+
+      - name: Setup Node Environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Prepare environment variables
+        env:
+          AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+        run: ../../scripts/set-env-variables.sh ${{ github.ref }}
+        shell: bash
+        
+      - name: 'Resolve Project Dependencies Using Npm'
+        shell: bash
+        run: |
+          npm install 
+          npm run build --if-present
+
+      - name: "Install Azure Function Core Tools"
+        run: "npm i -g azure-functions-core-tools@4" 
+
+      - name: 'Publish Azure Functions'
+        run: func azure functionapp publish func-app-nestjs-${{ env.ENV }}
+
+          
+
