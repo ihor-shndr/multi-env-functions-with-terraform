@@ -7,3 +7,4 @@ on:
 jobs:
   ci-cd-pipeline:
    uses: ./.github/workflows/shared.yml
+   secrets: inherit
