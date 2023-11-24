@@ -5,6 +5,6 @@ on:
   workflow_dispatch:
   
 jobs:
-  ci-cd-pipeline:
+  ci:
    uses: ./.github/workflows/shared.yml
    secrets: inherit

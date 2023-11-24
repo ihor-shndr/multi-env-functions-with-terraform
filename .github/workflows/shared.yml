@@ -42,8 +42,8 @@ jobs:
      - name: Terraform Apply
        run: terraform apply -var env=${{ env.ENV }} -var app_name=${{ vars.APP_NAME }} -auto-approve
 
-  build-and-deploy:
-    name: 'Build functions and deploy'
+  deploy:
+    name: 'Build and deploy'
     runs-on: ubuntu-latest
     needs: terraform
     defaults:
