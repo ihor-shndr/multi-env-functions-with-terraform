@@ -1,16 +1,13 @@
 ## Prerequisites
-1. GitHub CLI
-2. Azure CLI
+1. `GitHub CLI`
+2. `Azure CLI`
 
-## Set up Azure credentials and create storage for Terraform:
+## Set up Azure credentials and create storage for Terraform
 
-1. Specify your subscription ID, App name and Environment in .`env` file
-2. run `create-service-principal.sh` to create credentials for `GitHub`
-3. copy the JSON output and store it as `AZURE_CREDENTIALS` secret in GitHub
+run `set-up.sh` from `scripts` folder with `app name` as a first parameter. Ex: `./set-up.sh myapp`
 
 
-
-## Set up terraform state for environment:
+## Add environment:
 1. run `create-storage-account.sh` to create a storage for terraform state
 2. update the value for `STORAGE_ACCOUNT` in .env file
 3. commit changes
