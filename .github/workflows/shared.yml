@@ -2,10 +2,8 @@
 name: Build and deploy
 
 on:
-  push:
-    branches:
-      - '*'
-  workflow_dispatch:
+  workflow_call:
+    
 env:
   ENV: prod
   NODE_VERSION: '18.x'
