@@ -26,28 +26,22 @@ jobs:
      - name: Checkout the repository to the runner
        uses: actions/checkout@v4
 
-     - name: Azure Login
-       uses: azure/login@v1.4.6
-       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-
      - name: Create backend.conf file
        run: |
          chmod +x ../scripts/create-backend-conf.sh
-         ../scripts/create-backend-conf.sh $APP_NAME $ENV $STORAGE_ACCOUNT
+         ../scripts/create-backend-conf.sh ${{ vars.APP_NAME }} ${{ env.ENV }} ${{ vars.STORAGE_ACCOUNT }}
 
      - name: Setup Terraform with specified version on the runner
        uses: hashicorp/setup-terraform@v2
        with:
          terraform_version: 1.3.0
-     - name: Show backend.conf content
-       run: cat backend.conf
+         
      - name: Terraform init
        id: init
        run: terraform init -backend-config=backend.conf
  
      - name: Terraform Apply
-       run: terraform apply -var env=$ENV -auto-approve
+       run: terraform apply -var env=${{ env.ENV }} -auto-approve
 
   build-and-deploy:
     name: 'Build Nest functions and deploy'
