@@ -8,6 +8,7 @@ on:
   workflow_dispatch:
 env:
   ENV: prod
+  NODE_VERSION: '18.x'
   ARM_CLIENT_ID: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }}
   ARM_CLIENT_SECRET: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientSecret }}
   ARM_SUBSCRIPTION_ID: ${{ fromJson(secrets.AZURE_CREDENTIALS).subscriptionId }}
@@ -57,31 +58,25 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: 'Checkout GitHub Action'
+      - name: Checkout GitHub Action
         uses: actions/checkout@v4
 
       - name: Setup Node Environment
         uses: actions/setup-node@v3
         with:
           node-version: ${{ env.NODE_VERSION }}
-
-      - name: Prepare environment variables
-        env:
-          AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
-        run: ../../scripts/set-env-variables.sh ${{ github.ref }}
-        shell: bash
         
-      - name: 'Resolve Project Dependencies Using Npm'
+      - name: Resolve Project Dependencies Using Npm
         shell: bash
         run: |
           npm install 
           npm run build --if-present
 
-      - name: "Install Azure Function Core Tools"
-        run: "npm i -g azure-functions-core-tools@4" 
+      - name: Install Azure Function Core Tools
+        run: npm i -g azure-functions-core-tools@4 
 
-      - name: 'Publish Azure Functions'
-        run: func azure functionapp publish func-app-nestjs-${{ env.ENV }}
+      - name: Publish Azure Functions
+        run: func azure functionapp publish func-${{ vars.APP_NAME }}-${{ env.ENV }}
 
           
 

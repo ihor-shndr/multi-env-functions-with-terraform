@@ -81,7 +81,7 @@ resource "azurerm_storage_account" "functions_sa" {
   account_replication_type = "LRS"
 }
 
-resource "azurerm_linux_function_app" "nestjs_function_app" {
+resource "azurerm_linux_function_app" "function_app" {
   name                       = "func-${var.app_name}-${var.env}"
   location                   = azurerm_resource_group.functions_rg.location
   resource_group_name        = azurerm_resource_group.functions_rg.name
