@@ -41,7 +41,7 @@ jobs:
        run: terraform init -backend-config=backend.conf
  
      - name: Terraform Apply
-       run: terraform apply -var env=${{ env.ENV }} -auto-approve
+       run: terraform apply -var env=${{ env.ENV }} app_name=${{ vars.APP_NAME }} -auto-approve
 
   build-and-deploy:
     name: 'Build Nest functions and deploy'
@@ -50,7 +50,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: ./functions/hello-world
+        working-directory: ./functions
     steps:
       - name: Azure Login
         uses: azure/login@v1.4.6
