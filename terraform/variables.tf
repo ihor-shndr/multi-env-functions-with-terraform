@@ -3,7 +3,7 @@ variable "env" {
 }
 
 variable "azure_region" {
-  default     = "us-east"
+  default     = "eastus"
   description = "azure region"
 }
 
