@@ -8,3 +8,5 @@ jobs:
   ci:
    uses: ./.github/workflows/shared.yml
    secrets: inherit
+   with:
+    env: prod
