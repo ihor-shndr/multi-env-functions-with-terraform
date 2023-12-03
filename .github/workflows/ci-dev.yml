@@ -4,7 +4,6 @@ on:
       - 'dev'
   workflow_dispatch:
   
-permissions: read-all  
 jobs:
   ci:
    uses: ./.github/workflows/shared.yml
