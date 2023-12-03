@@ -35,9 +35,7 @@ jobs:
          ../scripts/create-backend-conf.sh ${{ vars.APP_NAME }} ${{ env.ENV }} ${{ vars.STORAGE_ACCOUNT }}
 
      - name: Setup Terraform with specified version on the runner
-       uses: hashicorp/setup-terraform@v2
-       with:
-         terraform_version: 1.3.0
+       uses: hashicorp/setup-terraform@v3
          
      - name: Terraform init
        id: init
