@@ -82,9 +82,7 @@ resource "azurerm_storage_account" "functions_sa" {
   location                        = azurerm_resource_group.functions_rg.location
   account_tier                    = "Standard"
   account_replication_type        = "GRS"
-  allow_nested_items_to_be_public = true
   min_tls_version                 = "TLS1_2"
-  public_network_access_enabled   = true
   queue_properties {
     logging {
       delete                = true
