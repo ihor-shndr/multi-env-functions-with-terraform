@@ -66,7 +66,7 @@ resource "azurerm_resource_group" "functions_rg" {
 # }
 
 resource "azurerm_service_plan" "functions_sp" {
-  name                = "sp-${var.app_name}-${var.env}"
+  name                = "sp-${var.app_name}"
   location            = azurerm_resource_group.functions_rg.location
   resource_group_name = azurerm_resource_group.functions_rg.name
   os_type             = "Linux"
@@ -82,7 +82,7 @@ resource "azurerm_storage_account" "functions_sa" {
 }
 
 resource "azurerm_linux_function_app" "function_app" {
-  name                       = "func-${var.app_name}-${var.env}"
+  name                       = "func-${var.app_name}"
   location                   = azurerm_resource_group.functions_rg.location
   resource_group_name        = azurerm_resource_group.functions_rg.name
   service_plan_id            = azurerm_service_plan.functions_sp.id

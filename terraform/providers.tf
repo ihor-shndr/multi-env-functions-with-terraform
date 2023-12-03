@@ -8,6 +8,7 @@ terraform {
   backend "azurerm" {
     container_name = "tfstate"
   }
+  required_version = "> 1.5.0"
 }
 provider "azurerm" {
   features {}
