@@ -36,7 +36,13 @@ jobs:
 
      - name: Setup Terraform with specified version on the runner
        uses: hashicorp/setup-terraform@v3
+
+     - uses: terraform-linters/setup-tflint@v3
+       name: Setup TFLint
          
+     - name: Run TFLint
+       run: tflint -f compact
+       
      - name: Terraform init
        id: init
        run: terraform init -backend-config=backend.conf

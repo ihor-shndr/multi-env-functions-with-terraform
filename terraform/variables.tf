@@ -6,7 +6,6 @@ variable "env" {
 variable "azure_region" {
   default     = "eastus"
   description = "azure region"
-  type = string
 }
 
 variable "app_name" {
