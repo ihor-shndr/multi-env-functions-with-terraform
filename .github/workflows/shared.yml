@@ -76,7 +76,7 @@ jobs:
         run: npm i -g azure-functions-core-tools@4 
 
       - name: Publish Azure Functions
-        run: func azure functionapp publish func-${{ vars.APP_NAME }}-${{ env.ENV }}
+        run: func azure functionapp publish func-${{ vars.APP_NAME }}
 
           
 
