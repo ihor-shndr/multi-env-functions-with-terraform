@@ -66,29 +66,45 @@ resource "azurerm_resource_group" "functions_rg" {
 # }
 
 resource "azurerm_service_plan" "functions_sp" {
+   #checkov:skip=CKV_AZURE_225:No need to make zone-redundant
   name                = "sp-${var.app_name}"
   location            = azurerm_resource_group.functions_rg.location
   resource_group_name = azurerm_resource_group.functions_rg.name
-  os_type             = "Linux"
-  sku_name            = "Y1"
+
+  os_type      = "Linux"
+  sku_name     = "Y1"
+  worker_count = 2
 }
 
 resource "azurerm_storage_account" "functions_sa" {
-  name                     = "storage${var.env}${random_string.random.id}"
-  resource_group_name      = azurerm_resource_group.functions_rg.name
-  location                 = azurerm_resource_group.functions_rg.location
-  account_tier             = "Standard"
-  account_replication_type = "LRS"
+  name                            = "storage${var.env}${random_string.random.id}"
+  resource_group_name             = azurerm_resource_group.functions_rg.name
+  location                        = azurerm_resource_group.functions_rg.location
+  account_tier                    = "Standard"
+  account_replication_type        = "GRS"
+  allow_nested_items_to_be_public = false
+  min_tls_version                 = "TLS1_2"
+  public_network_access_enabled   = false
+  queue_properties {
+    logging {
+      delete                = true
+      read                  = true
+      write                 = true
+      version               = "1.0"
+      retention_policy_days = 10
+    }
+  }
 }
 
 resource "azurerm_linux_function_app" "function_app" {
-  name                       = "func-${var.app_name}"
-  location                   = azurerm_resource_group.functions_rg.location
-  resource_group_name        = azurerm_resource_group.functions_rg.name
-  service_plan_id            = azurerm_service_plan.functions_sp.id
-  storage_account_name       = azurerm_storage_account.functions_sa.name
-  storage_account_access_key = azurerm_storage_account.functions_sa.primary_access_key
-
+  name                          = "func-${var.app_name}"
+  location                      = azurerm_resource_group.functions_rg.location
+  resource_group_name           = azurerm_resource_group.functions_rg.name
+  service_plan_id               = azurerm_service_plan.functions_sp.id
+  storage_account_name          = azurerm_storage_account.functions_sa.name
+  storage_account_access_key    = azurerm_storage_account.functions_sa.primary_access_key
+  https_only                    = true
+  public_network_access_enabled = false
 
   # app_settings = local.func_settings
 
